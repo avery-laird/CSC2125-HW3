@@ -10,7 +10,7 @@ import "hardhat/console.sol";
 
 contract TicketMarketplace is ITicketMarketplace {
 
-    address  _coinAddress;
+    address _coinAddress;
     address _owner;
     TicketNFT public _ticketNFT;
     uint128 _currentEventId;
@@ -63,6 +63,8 @@ contract TicketMarketplace is ITicketMarketplace {
         emit PriceUpdate(eventId, price, "ERC20");
     }
 
+//    function mkID(uint128 eventId, uint256 ticket) private view returns (u)
+
     function buyTickets(uint128 eventId, uint128 ticketCount) payable external {
         uint256 _price;
         unchecked { _price = _events[eventId].pricePerTicket * ticketCount; }
@@ -73,7 +75,15 @@ contract TicketMarketplace is ITicketMarketplace {
             revert("Not enough funds supplied to buy the specified number of tickets.");
         if (ticketCount > _events[eventId].maxTickets - _events[eventId].nextTicketToSell)
             revert("We don't have that many tickets left to sell!");
-//        _ticketNFT.mintFromMarketPlace(msg.sender, )
+
+        for (uint128 i=0; i < ticketCount; ++i) {
+            uint256 seat = _events[eventId].nextTicketToSell;
+            uint256 event256 = eventId;
+            uint256 id = (event256 << 128) + seat;
+            _ticketNFT.mintFromMarketPlace(msg.sender, id);
+            _events[eventId].nextTicketToSell++;
+        }
+
         emit TicketsBought(eventId, ticketCount, "ETH");
     }
 
@@ -82,10 +92,19 @@ contract TicketMarketplace is ITicketMarketplace {
         unchecked { _price = _events[eventId].pricePerTicketERC20 * ticketCount; }
         if (_price / _events[eventId].pricePerTicketERC20 != ticketCount)
             revert("Overflow happened while calculating the total price of tickets. Try buying smaller number of tickets.");
-//        if (msg.value < _price)
-//            revert("Not enough funds supplied to buy the specified number of tickets.");
+        uint256 senderBalance = IERC20(_coinAddress).balanceOf(msg.sender);
+        if (senderBalance < _price)
+            revert("Not enough funds supplied to buy the specified number of tickets.");
         if (ticketCount > _events[eventId].maxTickets - _events[eventId].nextTicketToSell)
             revert("We don't have that many tickets left to sell!");
+
+        for (uint128 i=0; i < ticketCount; ++i) {
+            uint256 seat = _events[eventId].nextTicketToSell;
+            uint256 event256 = eventId;
+            uint256 id = (event256 << 128) + seat;
+            _ticketNFT.mintFromMarketPlace(msg.sender, id);
+            _events[eventId].nextTicketToSell++;
+        }
 
         emit TicketsBought(eventId, ticketCount, "ERC20");
     }

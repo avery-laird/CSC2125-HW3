@@ -6,8 +6,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "hardhat/console.sol";
 
 contract SampleCoin is ERC20 {
-    constructor() payable ERC20("Ticket", "TCKT") {
-//        console.log(msg.value);
+    constructor() payable ERC20("SampleCoin", "SC") {
         _mint(msg.sender, 100000000000000000000);
     }
 
