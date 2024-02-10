@@ -14,7 +14,7 @@ contract TicketNFT is ERC1155, ITicketNFT {
     constructor()  ERC1155("") {
         _owner = msg.sender;
     }
-    
+
     function mintFromMarketPlace(address to, uint256 nftId) external {}
 
     function owner() public view returns (address) { return _owner; }

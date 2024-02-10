@@ -3,11 +3,12 @@ pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 
 contract SampleCoin is ERC20 {
-    constructor() ERC20("Ticket", "TCKT") {
-        _mint(msg.sender, 0);
+    constructor() payable ERC20("Ticket", "TCKT") {
+//        console.log(msg.value);
+        _mint(msg.sender, 100000000000000000000);
     }
 
 
