@@ -98,6 +98,8 @@ contract TicketMarketplace is ITicketMarketplace {
         if (ticketCount > _events[eventId].maxTickets - _events[eventId].nextTicketToSell)
             revert("We don't have that many tickets left to sell!");
 
+        IERC20(_coinAddress).transferFrom(msg.sender, address(this), _price);
+        
         for (uint128 i=0; i < ticketCount; ++i) {
             uint256 seat = _events[eventId].nextTicketToSell;
             uint256 event256 = eventId;
