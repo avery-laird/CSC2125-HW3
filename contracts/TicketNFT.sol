@@ -8,5 +8,14 @@ import {ITicketNFT} from "./interfaces/ITicketNFT.sol";
 // import "hardhat/console.sol";
 
 contract TicketNFT is ERC1155, ITicketNFT {
-    // your code goes here (you can do it!)
+
+    address _owner;
+
+    constructor()  ERC1155("") {
+        _owner = msg.sender;
+    }
+    
+    function mintFromMarketPlace(address to, uint256 nftId) external {}
+
+    function owner() public view returns (address) { return _owner; }
 }
